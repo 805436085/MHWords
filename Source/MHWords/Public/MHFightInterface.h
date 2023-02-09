@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "MHCharacterBase.h"
 #include "MHFightInterface.generated.h"
 
+class AMHCharacterBase;
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
 class UMHFightInterface : public UInterface

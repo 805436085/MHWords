@@ -17,6 +17,9 @@ class MHWORDS_API UMHFight : public UObject, public IMHFightInterface
     };
     
 public:
-    void fight_Implementation(AMHCharacterBase* player, AMHCharacterBase* monster);
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+    void fight(AMHCharacterBase* player, AMHCharacterBase* monster);
+    virtual void fight_Implementation(AMHCharacterBase* player, AMHCharacterBase* monster) override;
+    //void fight(AMHCharacterBase* player, AMHCharacterBase* monster);
 };
 

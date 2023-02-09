@@ -4,12 +4,22 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "MHFightInterface.h"
 #include "MHCharacterBase.generated.h"
 
 UCLASS()
-class MHWORDS_API AMHCharacterBase : public ACharacter
+class MHWORDS_API AMHCharacterBase : public ACharacter, public IMHFightInterface
 {
 	GENERATED_BODY()
+
+	enum AttackFromType
+	{
+		Default = 0,
+		PlayerToMonster = 1,
+		MonsterToPlayer = 2,
+		SameTime = 3,
+		Max
+	};
 
 public:
 	// Sets default values for this character's properties
@@ -26,19 +36,29 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void fight(AMHCharacterBase* player, AMHCharacterBase* monster);
+	virtual void fight_Implementation(AMHCharacterBase* player, AMHCharacterBase* monster) override;
+
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "property")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "property")
+		FString name;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "property")
 		int bloodValue;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "property")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "property")
 		int tiliValue;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "property")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "property")
 		int natureValue;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "property")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "property")
 		int attackValue;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "property")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "property")
 		int defenseValue;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "property")
+		int missValue;
 };

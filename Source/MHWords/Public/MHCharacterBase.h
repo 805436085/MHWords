@@ -4,11 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "MHFightInterface.h"
 #include "MHCharacterBase.generated.h"
 
 UCLASS()
-class MHWORDS_API AMHCharacterBase : public ACharacter, public IMHFightInterface
+class MHWORDS_API AMHCharacterBase : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -38,7 +37,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void fight(AMHCharacterBase* player, AMHCharacterBase* monster);
-	virtual void fight_Implementation(AMHCharacterBase* player, AMHCharacterBase* monster) override;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "property")
@@ -61,4 +59,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "property")
 		int missValue;
+		
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "property")
+		int calmValue;
 };

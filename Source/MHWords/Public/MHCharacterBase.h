@@ -10,7 +10,8 @@ UCLASS()
 class MHWORDS_API AMHCharacterBase : public ACharacter
 {
 	GENERATED_BODY()
-
+	
+public:
 	enum AttackFromType
 	{
 		Default = 0,

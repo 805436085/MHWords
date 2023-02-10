@@ -34,6 +34,8 @@ void AMHCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void AMHCharacterBase::fight_Implementation(AMHCharacterBase* player, AMHCharacterBase* monster)
 {
+	return ;
+	
 	int a = player->natureValue;
 	int b = monster->natureValue;
 	while (player->bloodValue > 0 && monster->bloodValue > 0)
@@ -72,27 +74,41 @@ void AMHCharacterBase::fight_Implementation(AMHCharacterBase* player, AMHCharact
 			{
 				UE_LOG(LogTemp, Log, TEXT("%s 躲开了！"), *(monster->name));
 			}
-			damaged = player->attackValue - monster->defenseValue;
-			monster->bloodValue -= damaged;
-			UE_LOG(LogTemp, Log, TEXT("%s 剩余血量: %d"), *(monster->name), monster->bloodValue);
+			else
+			{
+				damaged = player->attackValue - monster->defenseValue;
+				monster->bloodValue -= damaged;
+				UE_LOG(LogTemp, Log, TEXT("%s 剩余血量: %d"), *(monster->name), monster->bloodValue);
+			}
 			break;
 		case AttackFromType::MonsterToPlayer:
 			if (rd <= player->missValue)
 			{
 				UE_LOG(LogTemp, Log, TEXT("%s 躲开了！"), *(player->name));
 			}
-			damaged = monster->attackValue - player->defenseValue;
-			player->bloodValue -= damaged;
-			UE_LOG(LogTemp, Log, TEXT("%s 剩余血量: %d"), *(player->name), player->bloodValue);
+			else
+			{
+				damaged = monster->attackValue - player->defenseValue;
+				player->bloodValue -= damaged;
+				UE_LOG(LogTemp, Log, TEXT("%s 剩余血量: %d"), *(player->name), player->bloodValue);
+			}
 			break;
 		case AttackFromType::SameTime:
 			UE_LOG(LogTemp, Log, TEXT("同时攻击！"));
 			rd = FMath::RandRange(0, 100);
 			if (rd <= calmValue)
 			{
-				damaged = monster->attackValue - player->defenseValue;
-				player->bloodValue -= damaged;
-				UE_LOG(LogTemp, Log, TEXT("%s 剩余血量: %d"), *(player->name), player->bloodValue);
+				rd = FMath::RandRange(0, 100);
+				if (rd <= player->missValue)
+				{
+					UE_LOG(LogTemp, Log, TEXT("%s 躲开了！"), *(player->name));
+				}
+				else
+				{
+					damaged = monster->attackValue - player->defenseValue;
+					player->bloodValue -= damaged;
+					UE_LOG(LogTemp, Log, TEXT("%s 剩余血量: %d"), *(player->name), player->bloodValue);
+				}
 			}
 			
 			damaged = player->attackValue - monster->defenseValue;

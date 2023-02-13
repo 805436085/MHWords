@@ -53,6 +53,9 @@ public:
 		int natureValue;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "property")
+		int curNatureValue;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "property")
 		int attackValue;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "property")

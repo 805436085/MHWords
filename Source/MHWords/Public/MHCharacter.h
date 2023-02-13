@@ -34,7 +34,4 @@ private:
 
 	UFUNCTION()
 	void startFight();
-
-	bool bIsFighting;
-	bool bFightFinish;
 };

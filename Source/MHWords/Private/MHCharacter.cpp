@@ -7,31 +7,35 @@
 #include "WeaponComponent.h"
 #include "DSP/Delay.h"
 
+#define FreshTime 0.5
+
 AMHCharacter::AMHCharacter()
 {
 	m_Monster = nullptr;
-	bIsFighting = false;
-	bFightFinish = true;
 }
 
 void AMHCharacter::fight_Implementation(AMHCharacterBase* player, AMHCharacterBase* monster)
 {
 	this->m_Monster = monster;
-	bFightFinish = false;
 }
 
 void AMHCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	if (!bFightFinish)
+	static float DeltaS = 0.0;
+	if (DeltaS < FreshTime)
 	{
+		DeltaS += DeltaSeconds;
+	}
+	else if (DeltaS >= FreshTime)
+	{
+		DeltaS = 0.0;
 		startFight();
 	}
 }
 
 void AMHCharacter::fight_()
 {
-	bIsFighting = true;
 	if (this->bloodValue > 0 && m_Monster->bloodValue > 0)
 	{
 		UE_LOG(LogTemp, Log, TEXT("延迟前"));
@@ -117,34 +121,28 @@ void AMHCharacter::fight_()
 	{
 		UE_LOG(LogTemp, Log, TEXT("%s 倒下了！！！"), *(this->name));
 		UE_LOG(LogTemp, Log, TEXT("失败！！！"));
-		bFightFinish = true;
 	}
 	else if (m_Monster->bloodValue <= 0)
 	{
 		UE_LOG(LogTemp, Log, TEXT("%s 倒下了！！！"), *(m_Monster->name));
 		UE_LOG(LogTemp, Log, TEXT("胜利！！！"));
-		bFightFinish = true;
 	}
-	bIsFighting = false;
 }
 
 void AMHCharacter::startFight()
 {
-	if (!bIsFighting)
+	if (UWorld* world = GEngine->GetWorldFromContextObject(this, EGetWorldErrorMode::LogAndReturnNull))
 	{
-		if (UWorld* world = GEngine->GetWorldFromContextObject(this, EGetWorldErrorMode::LogAndReturnNull))
-		{
-			FLatentActionManager& LatentActionManager = world->GetLatentActionManager();
-			FLatentActionInfo LatentInfo;
+		FLatentActionManager& LatentActionManager = world->GetLatentActionManager();
+		FLatentActionInfo LatentInfo;
 
-			if (this->bloodValue > 0 && m_Monster && m_Monster->bloodValue > 0 && !bFightFinish)
-			{
-				LatentInfo.CallbackTarget = this;
-				LatentInfo.ExecutionFunction = TEXT("fight_");
-				LatentInfo.Linkage = 0;
-				LatentInfo.UUID = FMath::Rand();
-				LatentActionManager.AddNewAction(this, LatentInfo.UUID, new FDelayAction(2.0, LatentInfo));
-			}
+		if (this->bloodValue > 0 && m_Monster && m_Monster->bloodValue > 0)
+		{
+			LatentInfo.CallbackTarget = this;
+			LatentInfo.ExecutionFunction = TEXT("fight_");
+			LatentInfo.Linkage = 0;
+			LatentInfo.UUID = FMath::Rand();
+			LatentActionManager.AddNewAction(this, LatentInfo.UUID, new FDelayAction(0.1, LatentInfo));
 		}
 	}
 }

@@ -20,6 +20,9 @@ public:
 	AMHCharacter();
 	virtual void fight_Implementation(AMHCharacterBase* player, AMHCharacterBase* monster) override;
 	virtual void Tick(float DeltaSeconds) override;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void pushMessageToBox(const FString& str);
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "property")
@@ -28,10 +31,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "property")
 	AMHCharacterBase* m_Monster;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "property")
+	TArray<float> m_arrayShulianduValue;
+	
 private:
 	UFUNCTION()
 	void fight_();
 
 	UFUNCTION()
 	void startFight();
+
+	bool m_bIsFighting;
 };

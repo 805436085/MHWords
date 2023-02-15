@@ -13,5 +13,6 @@ UCLASS()
 class MHWORDS_API UBigSwordComponent : public UWeaponComponent
 {
 	GENERATED_BODY()
-	
+
+public:
 };

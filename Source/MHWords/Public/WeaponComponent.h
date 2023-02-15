@@ -16,6 +16,18 @@ public:
 	// Sets default values for this component's properties
 	UWeaponComponent();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "property")
+	float m_AttackValue;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "property")
+	float m_ZhanweiValue;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "property")
+	float m_XiuzhengValue;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "property")
+	float m_ZhaoshiValue;
+	
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

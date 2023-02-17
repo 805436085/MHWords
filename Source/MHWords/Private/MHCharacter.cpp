@@ -5,6 +5,7 @@
 
 #include "DelayAction.h"
 #include "WeaponComponent.h"
+#include "MHMonster.h"
 #include "DSP/Delay.h"
 
 #define FreshTime 0.5
@@ -23,8 +24,12 @@ void AMHCharacter::pushMessageToBox_Implementation(const FString& str)
 
 void AMHCharacter::fight_Implementation(AMHCharacterBase* player, AMHCharacterBase* monster)
 {
-	this->m_Monster = monster;
-	m_bIsFighting = true;
+	AMHMonster* m = dynamic_cast<AMHMonster*>(monster);
+	if (m)
+	{
+		this->m_Monster = m;
+		m_bIsFighting = true;
+	}
 }
 
 void AMHCharacter::Tick(float DeltaSeconds)
@@ -56,8 +61,7 @@ void AMHCharacter::fight_()
 		if (m_WeaponComponet && IsValid(m_WeaponComponet))
 		{
 			FStringFormatOrderedArguments args;
-			FString str = FString::Format(TEXT("fight_！"), args);
-			pushMessageToBox(str);
+			FString str;
 			
 			AttackFromType type = AMHCharacterBase::Default;
 			const int x = FMath::Min(this->curNatureValue, m_Monster->curNatureValue);
@@ -96,10 +100,36 @@ void AMHCharacter::fight_()
 				}
 				else
 				{
-					float tmpAttackValue = m_WeaponComponet->m_AttackValue * m_WeaponComponet->m_XiuzhengValue * m_WeaponComponet->m_ZhanweiValue * m_WeaponComponet->m_ZhaoshiValue * (float)(1 + m_arrayShulianduValue[0] * 0.01);
-					damaged = tmpAttackValue - m_Monster->defenseValue;
+					int tmpAttackValue = m_WeaponComponet->m_AttackValue * m_WeaponComponet->m_XiuzhengValue * m_WeaponComponet->m_ZhanweiValue * m_WeaponComponet->m_ZhaoshiValue * (float)(1 + m_arrayShulianduValue[0] * 0.01);
+					int count = m_Monster->m_HitPos.Num();
+					int weightSum = 0;
+					
+					for(int i = 0; i < count; i++)
+					{
+						weightSum += m_Monster->m_HitPos[i].weight;
+					}
+					rd = FMath::RandRange(1, weightSum);
+
+					FString hitstr;
+					for(int i = 0; i < count; i++)
+					{
+						rd -= m_Monster->m_HitPos[i].weight;
+						if (rd <= 0)
+						{
+							hitstr = m_Monster->m_HitPos[i].name;
+							m_Monster->m_RouZhi = m_Monster->m_HitPos[i].defenseRatio;
+							break;
+						}
+					}
+					
+					damaged = tmpAttackValue - m_Monster->defenseValue * m_Monster->m_RouZhi;
 					m_Monster->bloodValue -= damaged;
 					UE_LOG(LogTemp, Log, TEXT("%s 剩余血量: %d"), *(m_Monster->name), m_Monster->bloodValue);
+					args.Reset();
+					args.Add(FStringFormatArg(m_Monster->name));
+					args.Add(FStringFormatArg(m_Monster->bloodValue));
+					str = FString::Format(TEXT("{0} 剩余血量: {1}"), args);
+					pushMessageToBox(str);
 				}
 				break;
 			case AMHCharacterBase::MonsterToPlayer:

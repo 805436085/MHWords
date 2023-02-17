@@ -8,6 +8,7 @@
 
 
 class UWeaponComponent;
+class AMHMonster;
 /**
  * 
  */
@@ -29,7 +30,7 @@ public:
 	UWeaponComponent* m_WeaponComponet;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "property")
-	AMHCharacterBase* m_Monster;
+	AMHMonster* m_Monster;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "property")
 	TArray<float> m_arrayShulianduValue;

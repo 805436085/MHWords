@@ -124,7 +124,7 @@ void AMHCharacter::fight_()
 					
 					damaged = tmpAttackValue - m_Monster->defenseValue * m_Monster->m_RouZhi;
 					m_Monster->bloodValue -= damaged;
-					UE_LOG(LogTemp, Log, TEXT("%s 剩余血量: %d"), *(m_Monster->name), m_Monster->bloodValue);
+					UE_LOG(LogTemp, Log, TEXT("命中%s的%s 剩余血量: %d"), *(m_Monster->name), *(hitstr), m_Monster->bloodValue);
 					args.Reset();
 					args.Add(FStringFormatArg(m_Monster->name));
 					args.Add(FStringFormatArg(m_Monster->bloodValue));
